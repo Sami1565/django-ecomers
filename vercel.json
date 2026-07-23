@@ -1,0 +1,26 @@
+{
+    "builds": [
+        {
+            "src": "ecommerce_project/wsgi.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "10mb",
+                "runtime": "python3.12"
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "ecommerce_project/wsgi.py"
+        }
+    ],
+    "buildCommand": "python build_migrations.py && pip install -r requirements.txt",
+    "env": {
+        "DJANGO_SETTINGS_MODULE": "ecommerce_project.settings"
+    }
+}

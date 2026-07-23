@@ -172,3 +172,23 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # For development
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+import os
+import sys
+
+# Database
+if os.environ.get('VERCEL'):
+    # For Vercel, use SQLite (for demo)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    # Local development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
