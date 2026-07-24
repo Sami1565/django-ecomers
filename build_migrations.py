@@ -1,4 +1,4 @@
-﻿"""
+"""
 Vercel Build Migration Script
 This script runs migrations during Vercel deployment
 """
