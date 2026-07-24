@@ -19,12 +19,19 @@ def main():
         print("2. Applying migrations...")
         call_command('migrate', interactive=False, verbosity=3)
         
-        # Check if 'available' field exists
+        # Verify the 'available' field exists
         print("3. Verifying schema...")
         with connection.cursor() as cursor:
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-            tables = cursor.fetchall()
-            print(f"Tables found: {tables}")
+            cursor.execute("PRAGMA table_info(store_product);")
+            columns = cursor.fetchall()
+            column_names = [col[1] for col in columns]
+            print(f"Columns in store_product: {column_names}")
+            
+            if 'available' in column_names:
+                print("✅ 'available' field found!")
+            else:
+                print("❌ 'available' field NOT found - re-running migrations...")
+                call_command('migrate', interactive=False, verbosity=3)
         
         print("=== Migrations Completed Successfully! ===")
         

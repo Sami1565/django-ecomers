@@ -88,31 +88,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ecommerce_project.wsgi.application'
 
 # ============================================
-# DATABASE
+# DATABASE - Use SQLite for now
 # ============================================
 
-# Use PostgreSQL on Vercel, SQLite locally
-if 'VERCEL' in os.environ:
-    # Production - Vercel PostgreSQL
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('POSTGRES_DATABASE', ''),
-            'USER': os.environ.get('POSTGRES_USER', ''),
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
-            'HOST': os.environ.get('POSTGRES_HOST', ''),
-            'PORT': os.environ.get('POSTGRES_PORT', '5432'),
-            'CONN_MAX_AGE': 600,
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Development - SQLite
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 # ============================================
 # AUTHENTICATION
@@ -193,16 +177,6 @@ if 'VERCEL' in os.environ:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
-    
-    # Auto-run migrations on Vercel
-    try:
-        from django.core.management import call_command
-        print("Applying migrations on Vercel...")
-        call_command('makemigrations', interactive=False, verbosity=2)
-        call_command('migrate', interactive=False, verbosity=2)
-        print("Migrations applied successfully!")
-    except Exception as e:
-        print(f"Migration warning: {e}")
 
 print(f"DEBUG mode: {DEBUG}")
 print(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
