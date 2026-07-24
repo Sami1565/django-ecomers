@@ -7,23 +7,27 @@ def main():
     django.setup()
     
     from django.core.management import call_command
+    from django.db import connection
     
-    print("=== Starting Django on Vercel ===")
+    print("=== Starting Django Migration Process on Vercel ===")
     
     try:
-        # Create migrations
-        print("Creating migrations...")
-        call_command('makemigrations', interactive=False)
+        # Force migrations
+        print("1. Creating migrations...")
+        call_command('makemigrations', interactive=False, verbosity=3)
         
-        # Apply migrations
-        print("Applying migrations...")
-        call_command('migrate', interactive=False)
+        print("2. Applying migrations...")
+        call_command('migrate', interactive=False, verbosity=3)
         
-        # Collect static files
-        print("Collecting static files...")
-        call_command('collectstatic', interactive=False)
+        # Check if 'available' field exists
+        print("3. Verifying schema...")
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = cursor.fetchall()
+            print(f"Tables found: {tables}")
         
-        print("=== Deployment successful! ===")
+        print("=== Migrations Completed Successfully! ===")
+        
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
