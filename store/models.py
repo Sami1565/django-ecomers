@@ -1,5 +1,4 @@
-from django.db import models
-from django.contrib.auth.models import User
+﻿from django.db import models
 from django.utils.text import slugify
 
 class Category(models.Model):
@@ -40,24 +39,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    @property
-    def in_stock(self):
-        return self.stock > 0
-
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-        # Add these methods to your models
-
-class Category(models.Model):
-    # ... existing code ...
-    def get_absolute_url(self):
-        from django.urls import reverse
-        return reverse('store:product_list_by_category', args=[self.slug])
-
-class Product(models.Model):
-    # ... existing code ...
-    def get_absolute_url(self):
-        from django.urls import reverse
-        return reverse('store:product_detail', args=[self.slug])

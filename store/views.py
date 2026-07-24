@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+﻿from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
 from django.core.paginator import Paginator
 from .models import Product, Category
 
@@ -12,7 +13,6 @@ def product_list(request, category_slug=None):
     else:
         category = None
     
-    # Pagination (12 products per page)
     paginator = Paginator(products, 12)
     page = request.GET.get('page')
     products = paginator.get_page(page)
